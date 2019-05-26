@@ -28,18 +28,23 @@ public class MovTorreN extends Thread{
 
     public void pintarCaminoTorre(int x,int y, JButton boton1[][]) {
         if (rangoNorth(x, y, boton1)) {
-            boton1[x][y].setBackground(new Color(100,100,100));
+            boton1[x][y].setBackground(new Color(110,150,200));
             for (int i = 1; y - i >= 0 && x < dimensionX&& Start.verificando == 0; i++) {
-                if(objeto[x][y-i]!=0){
+                if(objeto[x][y-i]==1 || objeto[x][y-i]==2){
                     Start.verificando = 1;
-                    String mensaje = "Has perdido en la posición"+(x)+", "+(y-i);
+                    boton1[x][y-i].setBackground(new Color(200,20,20));
+                    String mensaje = "Has perdido en la posición: "+" Y: "+(x+1)+", X: "+(y-i+1);
                     JOptionPane.showMessageDialog(null,mensaje);
                 }
-                if (objeto[x][y-i]!=0)break;
-                if (boton1[x][y - i] != null && objeto[x][y-i]==0&& Start.verificando == 0) {
-                    boton1[x][y - i].setBackground(new Color(80, 80, 88));
+                if (objeto[x][y-i]==1 || objeto[x][y-i]==2 )break;
+                if (boton1[x][y - i] != null && objeto[x][y-i]==0 || objeto[x][y-i]==3&& Start.verificando == 0) {
+                    boton1[x][y - i].setBackground(new Color(110, 150, 200));
+                    if (objeto[x][y-i]==3)
+                        boton1[x][y-i].setBackground(new Color(5, 10, 50));
+
+                    objeto[x][y-i] = 3;
                     try{
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     }catch (InterruptedException e){
                         System.out.println("Error en la clase MovTorreN: "+e);
                     }

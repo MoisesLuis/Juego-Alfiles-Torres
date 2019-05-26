@@ -27,6 +27,9 @@ public class Start extends JFrame implements ActionListener{
     private JPanel panel;
     private JPanel panelCenter;
     private int botonSeleccionado;
+    private static int contador;
+    private boolean ver;
+
 
     /**
      * Método constructor
@@ -40,8 +43,8 @@ public class Start extends JFrame implements ActionListener{
         botonSeleccionado=0;
         x = 0;
         y = 0;
-
-        this.setSize(600,620);
+        contador =0;
+        this.setSize(800,820);
         this.setVisible(true);
         //this.setLayout(null);
         this.setLocationRelativeTo(null);
@@ -60,19 +63,18 @@ public class Start extends JFrame implements ActionListener{
         nuevoJuego.addActionListener(this);
         menu.add(nuevoJuego);
 
-        salir = new JMenuItem("Salir");
-        salir.addActionListener(this);
-        menu.add(salir);
-
         reportes = new JMenuItem("Reportes");
         reportes.addActionListener(this);
         menu.add(reportes);
 
+        salir = new JMenuItem("Salir");
+        salir.addActionListener(this);
+        menu.add(salir);
 
         panel = new JPanel();
-        panel.setBackground(new Color(10,10,50));
+        panel.setBackground(new Color(10,10,10));
         panelCenter = new JPanel();
-        panelCenter.setBackground(new Color(100,100,100));
+        panelCenter.setBackground(new Color(10,10,10));
 
 
 
@@ -81,9 +83,9 @@ public class Start extends JFrame implements ActionListener{
         boton1.setOpaque(true);
         boton1.setFocusPainted(false);
         boton1.setFont(new Font("News706 BT",Font.BOLD,20));
-        boton1.setForeground(new Color(200,200,200));
+        //boton1.setForeground(new Color(200,200,200));
         boton1.setBounds(80,5,150,60);
-        boton1.setBackground(new Color(0,0,0));
+        //boton1.setBackground(new Color(0,0,0));
         boton1.setIcon(new ImageIcon(alfil.getImage().getScaledInstance(boton1.getWidth(),boton1.getHeight(),Image.SCALE_SMOOTH)));
         boton1.addActionListener(this);
         panel.add(boton1);
@@ -92,23 +94,22 @@ public class Start extends JFrame implements ActionListener{
         boton2 = new JButton("Torre");
         boton2.setOpaque(true);
         boton2.setFont(new Font("News706 BT",Font.BOLD,20));
-        boton2.setForeground(new Color(200,200,200));
+        //boton2.setForeground(new Color(200,200,200));
         boton2.setBounds(200,5,150,60);
-        boton2.setBackground(new Color(0,0,0));
+        //boton2.setBackground(new Color(0,0,0));
         boton2.setIcon(new ImageIcon(torre.getImage().getScaledInstance(boton2.getWidth(),boton2.getHeight(),Image.SCALE_SMOOTH)));
         boton2.addActionListener(this);
         panel.add(boton2);
 
         boton = new JButton[dimensionX][dimensionY];
         objeto = new int[dimensionX][dimensionY];
-        inicializarVector();
+        ver = false;
 
+        inicializarVector();
         this.getContentPane().add(BorderLayout.NORTH, panel);
         this.getContentPane().add(BorderLayout.CENTER, panelCenter);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-
 
     }
 
@@ -250,24 +251,36 @@ public class Start extends JFrame implements ActionListener{
                 if (e.getSource()==boton[i][j]){
                     x= i;
                     y= j;
-                    if (botonSeleccionado == 1 && objeto[x][y]==0){
+                    if (botonSeleccionado == 1 && objeto[x][y]==0 || objeto[x][y]==3 ){
                         alfil(i,j);
+                        contador++;
+                        System.out.println(contador);
+                        gane();
                     }
-                    if (botonSeleccionado == 2&& objeto[x][y]==0){
+                    if (botonSeleccionado == 2 && objeto[x][y]==0 || objeto[x][y]==3){
                         Torre(i,j);
+                        contador++;
+                        System.out.println(contador);
+                        gane();
                     }
                 }
             }
         }
         if (e.getSource() == boton1){
-            boton2.setBackground(new Color(0,0,0));
-            boton1.setBackground(new Color(100,100,100));
+            //boton2.setBackground(new Color(0,0,0));
+            boton2.setBackground(new JButton().getBackground());
+            boton2.setForeground(new Color(0,0,0));
+            boton1.setBackground(new Color(20,50,100));
+            boton1.setForeground(new Color(200,200,200));
             botonSeleccionado = 1;
             //alfil(x,y);
         }
         if (e.getSource() == boton2){
-            boton1.setBackground(new Color(0,0,0));
-            boton2.setBackground(new Color(100,100,100));
+            //boton1.setBackground(new Color(0,0,0));
+            boton1.setBackground(new JButton().getBackground());
+            boton1.setForeground(new Color(0,0,0));
+            boton2.setBackground(new Color(110,150,200));
+            boton2.setForeground(new Color(200,20,0));
             botonSeleccionado = 2;
             //Torre(x,y);
         }
@@ -276,15 +289,19 @@ public class Start extends JFrame implements ActionListener{
             inicializarVectorDeNuevo();
         }
         if (e.getSource() == nuevoJuego){
+            limpiarCuadro();
+            contador = 0;
+            Start.verificando=0;
             this.setVisible(false);
             VentanaPrincipal ventPrincipal = new VentanaPrincipal();
+
 
         }
         if (e.getSource() == salir){
             System.exit(0);
         }
         if (e.getSource() == reportes){
-            Reportes report = new Reportes();
+            Reportes report = new Reportes(contador,this);
             this.setVisible(false);
         }
     }
@@ -309,9 +326,24 @@ public class Start extends JFrame implements ActionListener{
                 boton[i][j].addActionListener(this);
                 panelCenter.add(boton[i][j]);
                 Start.verificando =0;
+                contador=0;
             }
         }
         this.setVisible(true);
+    }
+
+    public void gane(){
+        ver = true;
+        for (int i = 0; i<dimensionX; i++){
+            for (int j = 0; j<dimensionY; j++){
+                if (objeto[i][j]==0)
+                    ver = false;
+            }
+        }
+        if (ver == true){
+            Ganado ganeG = new Ganado();
+            this.setVisible(false);
+        }
     }
 
 }

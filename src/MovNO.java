@@ -29,18 +29,24 @@ public class MovNO extends Thread{
 
     public void run(){
         if (rangoIzqArriba(posX, posY,boton1)) {
+            boton1[posX][posY].setBackground(new Color(20,50,100));
             for (int i = 1; posY - i >= 0 && posX - i >= 0&& Start.verificando == 0; i++) {
-                if(objeto[posX-i][posY-i]!=0){
+                if(objeto[posX-i][posY-i]==1 || objeto[posX-i][posY-i]==2){
                     Start.verificando = 1;
-                    String mensaje = "Has perdido en la posición"+(posX-i)+", "+(posY-i);
+                    boton1[posX-i][posY-i].setBackground(new Color(200,20,20));
+                    String mensaje = "Has perdido en la posición: "+" Y: "+(posX-i+1)+", X: "+(posY-i+1);
                     JOptionPane.showMessageDialog(null,mensaje);
 
                 }
-                if (objeto[posX-i][posY-i]!=0)break;
-                if (boton1[posX - i][posY - i] != null && objeto[posX-i][posY-i]==0&& Start.verificando == 0) {
-                    boton1[posX - i][posY - i].setBackground(new Color(255, 255, 2));
+                if (objeto[posX-i][posY-i]==1 || objeto[posX-i][posY-i]==2)break;
+                if (boton1[posX - i][posY - i] != null && objeto[posX-i][posY-i]==0 || objeto[posX-i][posY-i]==3&& Start.verificando == 0) {
+                    boton1[posX - i][posY - i].setBackground(new Color(20, 50, 100));
+                    if (objeto[posX-i][posY-i]==3)
+                        boton1[posX-i][posY-i].setBackground(new Color(5, 10, 50));
+
+                    objeto[posX-i][posY-i] = 3;
                     try{
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     }catch (InterruptedException e){
                         System.out.println("Error en la clase MovNO: "+e);
                     }

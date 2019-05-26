@@ -10,38 +10,51 @@ public class Reportes extends JFrame implements ActionListener {
     private JTextField textField1;
     private JButton agregarButton;
     private JTextField textField2;
-    DefaultTableModel modelo;
-    Object cabecera[]= {"Nombre","Perdio?","Pedido"};
-    Object datos[][]={{"Jose","Peres","si"},{"Jose","Peres","si"},{"Jose","Peres","si"},{"Jose","Peres","si"}};
+    private JButton aceptarButton;
+    private int contador;
+    private Start ventSecond;
 
-    public Reportes(){
+    DefaultTableModel modelo;
+
+
+    public Reportes(int contador,Start ventSecond){
+        this.ventSecond = ventSecond;
+        this.contador = contador;
+        System.out.println(contador);
         this.setSize(500,500);
         this.setLayout(null);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
-
         this.setContentPane(panel);
-        panel.setLayout(null);
 
-        modelo = new DefaultTableModel(datos,cabecera);
+        agregarButton.addActionListener(this);
+        aceptarButton.addActionListener(this);
+        modelo = new DefaultTableModel();
+
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Edad");
+        modelo.addColumn("Perdido");
+        modelo.addColumn("Punteo");
+        //Object name[] = {"Nombre","Edad","Perdido","Punteo"};
         table1.setModel(modelo);
         //table1.setBackground(new Color(200,200,200));
-        //panel.add(table1);
-
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-    }
-    public static void main(String args[]){
-        Reportes rep=new Reportes();
-        rep.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == agregarButton){
             String nombre = textField1.getText();
             int edad = Integer.parseInt(textField2.getText());
-            datos = new Object[2][2];
+
+            Object datos[]={nombre,edad,"si",contador};
+            modelo.addRow(datos);
+            table1.setModel(modelo);
+            agregarButton.setEnabled(false);
+        }
+        if (e.getSource() == aceptarButton){
+            this.setVisible(false);
+            ventSecond.setVisible(true);
         }
     }
 
